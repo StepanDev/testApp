@@ -9,7 +9,6 @@ const jwt = require('jsonwebtoken');
 
 module.exports = {
   registerUser: function (req, res) {
-    console.log('params', req.body);
     if (!Object.keys(req.body).length) {
       res.status(400).send('send params');
     } else {
@@ -26,14 +25,13 @@ module.exports = {
             res.status(201).send({newUser});
           }).catch(function (err) {
             console.trace(err);
-            res.status(500).send(err);
+            res.status(err.status || 500).send(err);
           })
         }
       })
     }
   },
   login: function (req, res) {
-    console.log('in login');
     const user = req.user;
     const payload = {
       id: user.id,
@@ -41,15 +39,21 @@ module.exports = {
       email: user.email
     };
     const token = jwt.sign(payload, jwtsecret); //здесь создается JWT
-    var expiresDate = new Date();
+    let expiresDate = new Date();
     expiresDate.setDate(expiresDate.getDate() + 7);
     res.cookie('jwt', token, {expires: expiresDate});
 
     res.send({user: user.name, token: 'JWT ' + token});
   },
   logout: function (req, res) {
-    console.log('here');
     res.clearCookie('jwt').send('logouted');
+  },
+  findUser: function (req, res) {
+    User.find({name: req.query.username}).then(function (user) {
+      res.send(user);
+    }).catch(function (err) {
+      res.status(err.status || 500).send(err);
+    })
   }
 }
 

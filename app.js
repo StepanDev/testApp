@@ -9,8 +9,9 @@ const mongoose = require('mongoose');
 const passport = require('passport');
 
 const index = require('./server/routes/index');
-const users = require('./server/routes/users');
+const users = require('./server/routes/Users');
 const auth = require('./server/services/auth');
+const permission = require('./server/routes/Permission');
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -29,6 +30,7 @@ app.use(passport.initialize());
 
 app.use('/', index);
 app.use('/users', users);
+app.use('/permission', permission);
 // app.use('/index', index);
 
 

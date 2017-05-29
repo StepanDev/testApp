@@ -27,7 +27,7 @@ router.post('/logout', UserController.logout);
 router.get("/secret", passport.authenticate('jwt', {session: true}), function (req, res) {
   res.json("Success! You can not see this without a token");
 });
-
+router.get("/find", UserController.findUser);
 
 
 router.post('/register', UserController.registerUser);

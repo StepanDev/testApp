@@ -9,12 +9,14 @@ const permissionSchema = new mongoose.Schema(
   {
     user: {
       type: Schema.Types.ObjectId,
-      ref: 'User'
+      ref: 'User',
+      unique:true,
+      required: 'Укажите пользователя'
     },
     role: {
-      type:String
-      // required:''
-    }
+      type: String
+    },
+    actions: Object
   }
 );
 
