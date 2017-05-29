@@ -3,7 +3,7 @@
  */
 
 const User = require('../models/users');
-const jwtsecret = 'secretkey';
+const jwtsecret = 'tasmanianDevil';
 const jwt = require('jsonwebtoken');
 
 
@@ -33,6 +33,7 @@ module.exports = {
     }
   },
   login: function (req, res) {
+    console.log('in login');
     const user = req.user;
     const payload = {
       id: user.id,

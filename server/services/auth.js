@@ -9,23 +9,17 @@ const ExtractJwt = require('passport-jwt').ExtractJwt; // авторизация
 const crypto = require('crypto');
 
 
-const jwtOptions = {};
-const cookieExtractor = function (req) {
-  let token = null;
-  if (req && req.cookies) {
-    token = req.cookies['jwt'];
-  }
-  return token;
-};
-
-jwtOptions.jwtFromRequest = ExtractJwt.fromExtractors([cookieExtractor()]);
-jwtOptions.secretOrKey = 'tasmanianDevil';
-
-
 passport.use(new LocalStrategy(
+  {
+
+    usernameField: 'email',
+    passwordField: 'password'
+  },
   function (userMail, password, done) {
+    console.log('local');
     User.findOne({mail: userMail})
       .then(function (user) {
+        console.log('user founded', user);
         if (!user || !user.checkPassword(password)) {
           return done(null, false, {
             message: 'Нет такого пользователя или пароль неверен.'
@@ -41,19 +35,38 @@ passport.use(new LocalStrategy(
 ));
 
 passport.serializeUser(function (user, done) {
-  done(null, user.mail);
+  console.log('serialize user', user);
+  done(null, user.id);
 });
 
-passport.deserializeUser(function (userMail, done) {
-  User.findOne({mail: userMail}, function (err, user) {
+passport.deserializeUser(function (id, done) {
+  console.log('serialize user', user);
+  User.findById(id, function (err, user) {
     console.trace(err);
     done(err, user);
   });
 });
 
+
+const cookieExtractor = function (req) {
+  console.log('in cookies');
+  let token = null;
+  if (req && req.cookies) {
+    token = req.cookies['jwt'];
+  }
+  console.log(token);
+  return token;
+};
+
+const jwtOptions = {
+  jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
+  secretOrKey: 'tasmanianDevil'
+};
+
+
 passport.use('jwt', new JwtStrategy(jwtOptions, function (jwt_payload, done) {
   console.log('jwt', jwt_payload);
-  User.findOne({mail: jwt_payload.email})
+  User.findById(jwt_payload.id)
     .then(function (user) {
       user ? done(null, user) : done(null, false);
     })
