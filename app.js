@@ -12,6 +12,7 @@ const index = require('./server/routes/index');
 const users = require('./server/routes/Users');
 const auth = require('./server/services/auth');
 const permission = require('./server/routes/Permission');
+const refBook = require('./server/routes/RefBook');
 const app = express();
 
 app.set('view engine', 'ejs');
@@ -31,6 +32,8 @@ app.use(passport.initialize());
 app.use('/', index);
 app.use('/users', users);
 app.use('/permission', permission);
+app.use('/refBook', refBook);
+
 // app.use('/index', index);
 
 

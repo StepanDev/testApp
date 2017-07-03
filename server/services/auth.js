@@ -1,8 +1,5 @@
-/**
- * Created by Mariana on 26.05.2017.
- */
 const passport = require('passport');
-const User = require('../models/users');
+const User = require('../models/Users');
 const LocalStrategy = require('passport-local').Strategy;
 const JwtStrategy = require('passport-jwt').Strategy; // авторизация через JWT
 const ExtractJwt = require('passport-jwt').ExtractJwt; // авторизация через JWT
@@ -12,7 +9,7 @@ const crypto = require('crypto');
 passport.use(new LocalStrategy(
   {
 
-    usernameField: 'email',
+    usernameField: 'userMail',
     passwordField: 'password'
   },
   function (userMail, password, done) {
@@ -60,7 +57,7 @@ const cookieExtractor = function (req) {
 
 const jwtOptions = {
   jwtFromRequest: ExtractJwt.fromExtractors([cookieExtractor]),
-  secretOrKey: 'tasmanianDevil'
+    secretOrKey: 'tasmanianDevil'
 };
 
 
